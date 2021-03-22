@@ -36,8 +36,11 @@ module Enumerable
     if block_given?
       my_each { |el| check = false if yield(el) == false }
     elsif args.size.positive? # have argument - for matching
-      my_each { |el| check = false unless el.match(args[0]) } if args[0].instance_of?(Regexp)
-      my_each { |el| check = false unless [el.class, el.class.superclass].include?(args[0]) }
+      if args[0].instance_of?(Regexp)
+        my_each { |el| check = false unless args[0] =~ el }
+      else
+        my_each { |el| check = false unless [el.class, el.class.superclass].include?(args[0]) }
+      end
     else
       my_each { |el| check = false if [nil, false].include?(el) }
     end
@@ -49,8 +52,11 @@ module Enumerable
     if block_given?
       my_each { |el| check = true if yield(el) == true }
     elsif args.size.positive? # have argument - for matching
-      my_each { |el| check = true if el.match(args[0]) } if args[0].instance_of?(Regexp)
-      my_each { |el| check = true if [el.class, el.class.superclass].include?(args[0]) }
+      if args[0].instance_of?(Regexp)
+        my_each { |el| check = true if args[0] =~ el }
+      else
+        my_each { |el| check = true if [el.class, el.class.superclass].include?(args[0]) }
+      end
     else
       check = 0
       my_each { |el| check += 1 if el == true }
@@ -66,7 +72,7 @@ module Enumerable
     if block_given?
       my_each { |el| count += 1 if yield(el) == false }
     elsif args.size.positive? # have argument - for matching
-      my_each { |el| count += 1 unless el.match(args[0]) } if args[0].instance_of?(Regexp)
+      my_each { |el| count += 1 unless args[0] =~ el } if args[0].instance_of?(Regexp)
       my_each { |el| count += 1 unless [el.class, el.class.superclass].include?(args[0]) }
     else
       my_each { |el| count += 1 if [nil, false].include?(el) }
