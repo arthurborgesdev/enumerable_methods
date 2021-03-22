@@ -36,7 +36,7 @@ module Enumerable
     if block_given?
       my_each { |el| check = false if yield(el) == false }
     elsif args.size.positive? # have argument - for matching
-      my_each { |el| check = false unless el.match(args[0]) } if args[0].instance_of?(Regexp)
+      my_each { |el| check = false unless args[0].match(el) } if args[0].instance_of?(Regexp)
       my_each { |el| check = false unless [el.class, el.class.superclass].include?(args[0]) }
     else
       my_each { |el| check = false if [nil, false].include?(el) }
