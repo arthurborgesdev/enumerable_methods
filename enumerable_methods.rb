@@ -17,7 +17,7 @@ module Enumerable
 
     i = 0
     while i < size
-      yield to_a[i]
+      yield to_a[i], i
       i += 1
     end
     self
@@ -119,3 +119,15 @@ module Enumerable
   end
 end
 # rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+
+def multiply_els(args)
+  args.my_inject{ |memo, n| memo * n }
+end
+
+# my_all?
+p "%w[ant bear cat].my_all? { |word| word.length >= 3 } #{%w[ant bear cat].my_all? { |word| word.length >= 3 }}" #=> true
+p "%w[ant bear cat].my_all? { |word| word.length >= 4 } #{%w[ant bear cat].my_all? { |word| word.length >= 4 }}" #=> false
+p "%w[ant bear cat].my_all?(/a/)                        #{%w[ant bear cat].my_all?(/a/)}"                        #=> false
+p "[1, 2i, 3.14].my_all?(Numeric)                       #{[1, 2i, 3.14].my_all?(Numeric)}"                       #=> true
+p "[nil, true, 99].my_all?                              #{[nil, true, 99].my_all?}"                              #=> false
+p "[].my_all?                                           #{[].my_all?}"                                           #=> true
