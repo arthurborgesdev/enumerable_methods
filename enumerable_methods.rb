@@ -1,4 +1,4 @@
-# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
+# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/ModuleLength
 
 module Enumerable
   def my_each
@@ -77,7 +77,7 @@ module Enumerable
       my_each { |el| count += 1 if yield(el) == false }
     elsif args.size.positive? # have argument - for matching
       if args[0].instance_of?(Regexp)
-        my_each { |el| count += 1 unless args[0] =~ el } 
+        my_each { |el| count += 1 unless args[0] =~ el }
       elsif args[0].instance_of?(Class)
         my_each { |el| count += 1 unless [el.class, el.class.superclass].include?(args[0]) }
       else
@@ -158,80 +158,4 @@ end
 def multiply_els(args)
   args.my_inject { |result, init| result * init }
 end
-# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
-
-p ["Marco", "Arthur", "Ariel"].my_inject("Microverse") { |result, init| result + init }
-
-p multiply_els([1, 4, 6, 9, 12, 24])
-
-p [1, 2, 3].my_inject { |result, init| result * init }
-
-p [1, 2, 3].my_inject(15) { |result, init| result * init }
-
-p [1, 2, 3, 4, 5].my_inject(:*)
-
-p (1..5).my_inject(:*)
-
-p [1, 2, 3].my_inject(15, :*)
-
-p (1..3).inject(15, :*)
-
-p "-----------------------------"
-
-p [1, 2, 3].my_inject("*")
-
-p (1..3).my_inject("*")
-
-p [1, 2, 3].my_inject(15, "*")
-
-p (1..3).inject(15, "*")
-
-p "######################################"
-
-p (1..3).inject(15, "*") { |result, init| memo + n }
-
-# my_all?
-p "%w[ant bear cat].my_all? { |word| word.length >= 3 } #{%w[ant bear cat].my_all? { |word| word.length >= 3 }}" #=> true
-p "%w[ant bear cat].my_all? { |word| word.length >= 4 } #{%w[ant bear cat].my_all? { |word| word.length >= 4 }}" #=> false
-p "%w[ant bear cat].my_all?(/t/)                        #{%w[ant bear cat].my_all?(/t/)}"                        #=> false
-p "[1, 2i, 3.14].my_all?(Numeric)                       #{[1, 2i, 3.14].my_all?(Numeric)}"                       #=> true
-p "[nil, true, 99].my_all?                              #{[nil, true, 99].my_all?}"                              #=> false
-p "[].my_all?                                           #{[].my_all?}"                                           #=> true
-
-p "---"
-p [1, 2i, 3.14].my_all?(2i)  
-p [1, 2i, 3.14].my_all?(1)  
-p [1, 1, 1].my_all?(1)
-
-#my_any?
-p "%w[ant bear cat].my_any? { |word| word.length >= 3 } #{%w[ant bear cat].my_any? { |word| word.length >= 3 }}" #=> true
-p "%w[ant bear cat].my_any? { |word| word.length >= 4 } #{%w[ant bear cat].my_any? { |word| word.length >= 4 }}" #=> true
-p "%w[ant bear cat].my_any?(/d/)                        #{%w[ant bear cat].my_any?(/d/) }"                       #=> false
-p "[nil, true, 99].my_any?(Integer)                     #{[nil, true, 99].my_any?(Integer)}"                     #=> true
-p "[nil, true, 99].my_any?                              #{[nil, true, 99].my_any? }"                             #=> true
-p "[].my_any?                                           #{[].my_any?}"                                           #=> false
-
-p "---"
-p [1, 2i, 3.14].my_any?(2i)  
-p [1, 2i, 3.14].my_any?(1)  
-p [1, 1, 1].my_any?(1)
-p [0, 0, 0].my_any?(1)
-
-
-#my_none?
-p "%w{ant bear cat}.my_none? { |word| word.length == 5 } #{%w{ant bear cat}.my_none? { |word| word.length == 5 }}" #=> true
-p "%w{ant bear cat}.my_none? { |word| word.length >= 4 } #{%w{ant bear cat}.my_none? { |word| word.length >= 4 }}" #=> false
-p "%w{ant bear cat}.my_none?(/d/)                        #{%w{ant bear cat}.my_none?(/d/)}"                        #=> true
-p "%w{ant bear cat}.my_none?(/a/)                        #{%w{ant bear cat}.my_none?(/a/)}"                        #=> false
-p "[1, 3.14, 42].my_none?(Float)                         #{[1, 3.14, 42].my_none?(Float)}"                         #=> false
-p "[].my_none?                                           #{[].my_none?}"                                           #=> true
-p "[nil].my_none?                                        #{[nil].my_none?}"                                        #=> true
-p "[nil, false].my_none?                                 #{[nil, false].my_none?}"                                 #=> true
-p "[nil, false, true].my_none?                           #{[nil, false, true].my_none?}"                           #=> false
-
-
-p "---"
-p [1, 2i, 3.14].my_none?(2i)  
-p [1, 2i, 3.14].my_none?(1)  
-p [1, 1, 1].my_none?(1)
-p [0, 0, 0].my_none?(1)
+# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/ModuleLength
