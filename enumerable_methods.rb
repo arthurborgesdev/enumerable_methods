@@ -102,10 +102,11 @@ module Enumerable
     new_array
   end
 
-  def my_inject(*)
+  def my_inject(*arg)
+    p arg
     arr = to_a
-    result = arr[0]
     n = arr[1]
+    result = arr[0]
     i = 0
     while i < arr.size - 1
       result = yield(result, n)
@@ -115,16 +116,20 @@ module Enumerable
     result
   end
 end
-# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
 def multiply_els(args)
   args.my_inject{ |memo, n| memo * n }
 end
+# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
-# my_all?
-p "%w[ant bear cat].my_all? { |word| word.length >= 3 } #{%w[ant bear cat].my_all? { |word| word.length >= 3 }}" #=> true
-p "%w[ant bear cat].my_all? { |word| word.length >= 4 } #{%w[ant bear cat].my_all? { |word| word.length >= 4 }}" #=> false
-p "%w[ant bear cat].my_all?(/a/)                        #{%w[ant bear cat].my_all?(/a/)}"                        #=> false
-p "[1, 2i, 3.14].my_all?(Numeric)                       #{[1, 2i, 3.14].my_all?(Numeric)}"                       #=> true
-p "[nil, true, 99].my_all?                              #{[nil, true, 99].my_all?}"                              #=> false
-p "[].my_all?                                           #{[].my_all?}"                                           #=> true
+#my_inject
+# Same using a block and inject
+(5..10).my_inject { |sum, n| sum + n }            #=> 45
+
+# Same using a block
+p (5..10).my_inject(3) { |product, n| product * n } #=> 151200
+ #find the longest word
+longest = %w{ cat sheep bear }.my_inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+longest                                        #=> "sheep"
