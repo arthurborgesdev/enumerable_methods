@@ -56,8 +56,10 @@ module Enumerable
     elsif args.size.positive? # have argument - for matching
       if args[0].instance_of?(Regexp)
         my_each { |el| check = true if args[0] =~ el }
-      else
+      elsif args[0].instance_of?(Class)
         my_each { |el| check = true if [el.class, el.class.superclass].include?(args[0]) }
+      else
+        my_each { |el| check = true if el == args[0] }
       end
     else
       check = 0
@@ -170,7 +172,6 @@ p [1, 2i, 3.14].my_all?(2i)
 p [1, 2i, 3.14].my_all?(1)  
 p [1, 1, 1].my_all?(1)
 
-=begin
 #my_any?
 p "%w[ant bear cat].my_any? { |word| word.length >= 3 } #{%w[ant bear cat].my_any? { |word| word.length >= 3 }}" #=> true
 p "%w[ant bear cat].my_any? { |word| word.length >= 4 } #{%w[ant bear cat].my_any? { |word| word.length >= 4 }}" #=> true
@@ -179,6 +180,13 @@ p "[nil, true, 99].my_any?(Integer)                     #{[nil, true, 99].my_any
 p "[nil, true, 99].my_any?                              #{[nil, true, 99].my_any? }"                             #=> true
 p "[].my_any?                                           #{[].my_any?}"                                           #=> false
 
+p "---"
+p [1, 2i, 3.14].my_any?(2i)  
+p [1, 2i, 3.14].my_any?(1)  
+p [1, 1, 1].my_any?(1)
+p [0, 0, 0].my_any?(1)
+
+=begin
 #my_none?
 p "%w{ant bear cat}.my_none? { |word| word.length == 5 } #{%w{ant bear cat}.my_none? { |word| word.length == 5 }}" #=> true
 p "%w{ant bear cat}.my_none? { |word| word.length >= 4 } #{%w{ant bear cat}.my_none? { |word| word.length >= 4 }}" #=> false
