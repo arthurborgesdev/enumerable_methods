@@ -38,8 +38,10 @@ module Enumerable
     elsif args.size.positive? # have argument - for matching
       if args[0].instance_of?(Regexp)
         my_each { |el| check = false unless args[0] =~ el }
-      else
+      elsif args[0].instance_of?(Class)
         my_each { |el| check = false unless [el.class, el.class.superclass].include?(args[0]) }
+      else
+        my_each { |el| check = false unless el == args[0] }
       end
     else
       my_each { |el| check = false if [nil, false].include?(el) }
@@ -153,3 +155,37 @@ def multiply_els(args)
   args.my_inject { |result, init| result * init }
 end
 # rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
+
+
+# my_all?
+p "%w[ant bear cat].my_all? { |word| word.length >= 3 } #{%w[ant bear cat].my_all? { |word| word.length >= 3 }}" #=> true
+p "%w[ant bear cat].my_all? { |word| word.length >= 4 } #{%w[ant bear cat].my_all? { |word| word.length >= 4 }}" #=> false
+p "%w[ant bear cat].my_all?(/t/)                        #{%w[ant bear cat].my_all?(/t/)}"                        #=> false
+p "[1, 2i, 3.14].my_all?(Numeric)                       #{[1, 2i, 3.14].my_all?(Numeric)}"                       #=> true
+p "[nil, true, 99].my_all?                              #{[nil, true, 99].my_all?}"                              #=> false
+p "[].my_all?                                           #{[].my_all?}"                                           #=> true
+
+p "---"
+p [1, 2i, 3.14].my_all?(2i)  
+p [1, 2i, 3.14].my_all?(1)  
+p [1, 1, 1].my_all?(1)
+
+=begin
+#my_any?
+p "%w[ant bear cat].my_any? { |word| word.length >= 3 } #{%w[ant bear cat].my_any? { |word| word.length >= 3 }}" #=> true
+p "%w[ant bear cat].my_any? { |word| word.length >= 4 } #{%w[ant bear cat].my_any? { |word| word.length >= 4 }}" #=> true
+p "%w[ant bear cat].my_any?(/d/)                        #{%w[ant bear cat].my_any?(/d/) }"                       #=> false
+p "[nil, true, 99].my_any?(Integer)                     #{[nil, true, 99].my_any?(Integer)}"                     #=> true
+p "[nil, true, 99].my_any?                              #{[nil, true, 99].my_any? }"                             #=> true
+p "[].my_any?                                           #{[].my_any?}"                                           #=> false
+
+#my_none?
+p "%w{ant bear cat}.my_none? { |word| word.length == 5 } #{%w{ant bear cat}.my_none? { |word| word.length == 5 }}" #=> true
+p "%w{ant bear cat}.my_none? { |word| word.length >= 4 } #{%w{ant bear cat}.my_none? { |word| word.length >= 4 }}" #=> false
+p "%w{ant bear cat}.my_none?(/d/)                        #{%w{ant bear cat}.my_none?(/d/)}"                        #=> true
+p "[1, 3.14, 42].my_none?(Float)                         #{[1, 3.14, 42].my_none?(Float)}"                         #=> false
+p "[].my_none?                                           #{[].my_none?}"                                           #=> true
+p "[nil].my_none?                                        #{[nil].my_none?}"                                        #=> true
+p "[nil, false].my_none?                                 #{[nil, false].my_none?}"                                 #=> true
+p "[nil, false, true].my_none?                           #{[nil, false, true].my_none?}"                           #=> false
+=end
