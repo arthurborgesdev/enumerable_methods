@@ -32,7 +32,7 @@ Need Ruby 1.9+ installed
 
 ### Usage
 
-`ruby bubble_sort.rb`
+`ruby enumerable_methods.rb`
 
 ## Authors
 

@@ -1,4 +1,4 @@
-# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
 
 module Enumerable
   def my_each
@@ -102,34 +102,54 @@ module Enumerable
     new_array
   end
 
-  def my_inject(*arg)
-    p arg
+  def my_inject(arg = nil, symbol = nil)
+    if symbol.nil?
+      symbol = arg
+      arg = nil
+    end
     arr = to_a
-    n = arr[1]
-    result = arr[0]
-    i = 0
-    while i < arr.size - 1
-      result = yield(result, n)
-      n = arr[i + 2]
-      i += 1
+    if !arg.nil? && (symbol.is_a?(Symbol) || symbol.is_a?(String)) # both exists
+      init = arg
+      result = arr[0]
+      i = 0
+      while i < arr.size
+        result = result.send(symbol, init)
+        init = arr[i + 1]
+        i += 1
+      end
+    elsif arg.nil? && (symbol.is_a?(Symbol) || symbol.is_a?(String)) # only symbol exists
+      result = arr[0]
+      init = arr[1]
+      i = 0
+      while i < arr.size - 1
+        result = result.send(symbol, init)
+        init = arr[i + 2]
+        i += 1
+      end
+    elsif !arg.nil? && (!symbol.is_a?(Symbol) || !symbol.is_a?(String)) # only arg and block exists
+      init = arg
+      result = arr[0]
+      i = 0
+      while i < arr.size - 1
+        result = yield(result, init)
+        init = arr[i + 2]
+        i += 1
+      end
+    else # when nothing exists (only block)
+      result = arr[0]
+      init = arr[1]
+      i = 0
+      while i < arr.size - 1
+        result = yield(result, init)
+        init = arr[i + 2]
+        i += 1
+      end
     end
     result
   end
 end
 
 def multiply_els(args)
-  args.my_inject{ |memo, n| memo * n }
+  args.my_inject { |result, init| result * init }
 end
-# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-
-#my_inject
-# Same using a block and inject
-(5..10).my_inject { |sum, n| sum + n }            #=> 45
-
-# Same using a block
-p (5..10).my_inject(3) { |product, n| product * n } #=> 151200
- #find the longest word
-longest = %w{ cat sheep bear }.my_inject do |memo, word|
-   memo.length > word.length ? memo : word
-end
-longest                                        #=> "sheep"
+# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
