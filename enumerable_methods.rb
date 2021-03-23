@@ -112,10 +112,6 @@ module Enumerable
   end
 
   def my_inject(arg = nil, symbol = nil)
-    if symbol.nil?
-      symbol = arg
-      arg = nil
-    end
     arr = to_a
     if !arg.nil? && (symbol.is_a?(Symbol) || symbol.is_a?(String)) # both exists
       init = arg
@@ -126,7 +122,8 @@ module Enumerable
         init = arr[i + 1]
         i += 1
       end
-    elsif arg.nil? && (symbol.is_a?(Symbol) || symbol.is_a?(String)) # only symbol exists
+    elsif (arg.is_a?(Symbol) || arg.is_a?(String)) && !block_given? # only symbol exists
+      symbol = arg
       result = arr[0]
       init = arr[1]
       i = 0
@@ -135,13 +132,13 @@ module Enumerable
         init = arr[i + 2]
         i += 1
       end
-    elsif !arg.nil? && (!symbol.is_a?(Symbol) || !symbol.is_a?(String)) # only arg and block exists
+    elsif !arg.nil? && block_given? # only arg and block exists
       init = arg
       result = arr[0]
       i = 0
-      while i < arr.size - 1
+      while i < arr.size
         result = yield(result, init)
-        init = arr[i + 2]
+        init = arr[i + 1]
         i += 1
       end
     else # when nothing exists (only block)
@@ -163,6 +160,35 @@ def multiply_els(args)
 end
 # rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
 
+p ["Marco", "Arthur", "Ariel"].my_inject("Microverse") { |result, init| result + init }
+
+p multiply_els([1, 4, 6, 9, 12, 24])
+
+p [1, 2, 3].my_inject { |result, init| result * init }
+
+p [1, 2, 3].my_inject(15) { |result, init| result * init }
+
+p [1, 2, 3, 4, 5].my_inject(:*)
+
+p (1..5).my_inject(:*)
+
+p [1, 2, 3].my_inject(15, :*)
+
+p (1..3).inject(15, :*)
+
+p "-----------------------------"
+
+p [1, 2, 3].my_inject("*")
+
+p (1..3).my_inject("*")
+
+p [1, 2, 3].my_inject(15, "*")
+
+p (1..3).inject(15, "*")
+
+p "######################################"
+
+p (1..3).inject(15, "*") { |result, init| memo + n }
 
 # my_all?
 p "%w[ant bear cat].my_all? { |word| word.length >= 3 } #{%w[ant bear cat].my_all? { |word| word.length >= 3 }}" #=> true
