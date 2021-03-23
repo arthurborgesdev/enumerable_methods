@@ -76,8 +76,13 @@ module Enumerable
     if block_given?
       my_each { |el| count += 1 if yield(el) == false }
     elsif args.size.positive? # have argument - for matching
-      my_each { |el| count += 1 unless args[0] =~ el } if args[0].instance_of?(Regexp)
-      my_each { |el| count += 1 unless [el.class, el.class.superclass].include?(args[0]) }
+      if args[0].instance_of?(Regexp)
+        my_each { |el| count += 1 unless args[0] =~ el } 
+      elsif args[0].instance_of?(Class)
+        my_each { |el| count += 1 unless [el.class, el.class.superclass].include?(args[0]) }
+      else
+        my_each { |el| count += 1 unless el == args[0] }
+      end
     else
       my_each { |el| count += 1 if [nil, false].include?(el) }
     end
@@ -186,14 +191,21 @@ p [1, 2i, 3.14].my_any?(1)
 p [1, 1, 1].my_any?(1)
 p [0, 0, 0].my_any?(1)
 
-=begin
+
 #my_none?
 p "%w{ant bear cat}.my_none? { |word| word.length == 5 } #{%w{ant bear cat}.my_none? { |word| word.length == 5 }}" #=> true
 p "%w{ant bear cat}.my_none? { |word| word.length >= 4 } #{%w{ant bear cat}.my_none? { |word| word.length >= 4 }}" #=> false
 p "%w{ant bear cat}.my_none?(/d/)                        #{%w{ant bear cat}.my_none?(/d/)}"                        #=> true
+p "%w{ant bear cat}.my_none?(/a/)                        #{%w{ant bear cat}.my_none?(/a/)}"                        #=> false
 p "[1, 3.14, 42].my_none?(Float)                         #{[1, 3.14, 42].my_none?(Float)}"                         #=> false
 p "[].my_none?                                           #{[].my_none?}"                                           #=> true
 p "[nil].my_none?                                        #{[nil].my_none?}"                                        #=> true
 p "[nil, false].my_none?                                 #{[nil, false].my_none?}"                                 #=> true
 p "[nil, false, true].my_none?                           #{[nil, false, true].my_none?}"                           #=> false
-=end
+
+
+p "---"
+p [1, 2i, 3.14].my_none?(2i)  
+p [1, 2i, 3.14].my_none?(1)  
+p [1, 1, 1].my_none?(1)
+p [0, 0, 0].my_none?(1)
