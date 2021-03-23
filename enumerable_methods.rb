@@ -1,4 +1,4 @@
-# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+# rubocop: disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
 
 module Enumerable
   def my_each
@@ -112,16 +112,16 @@ module Enumerable
       init = arg
       result = arr[0]
       i = 0
-      while i < arr.size 
+      while i < arr.size
         result = result.send(symbol, init)
         init = arr[i + 1]
         i += 1
       end
     elsif arg.nil? && (symbol.is_a?(Symbol) || symbol.is_a?(String)) # only symbol exists
-      result = arr[0] 
+      result = arr[0]
       init = arr[1]
       i = 0
-      while i < arr.size - 1 
+      while i < arr.size - 1
         result = result.send(symbol, init)
         init = arr[i + 2]
         i += 1
@@ -130,12 +130,12 @@ module Enumerable
       init = arg
       result = arr[0]
       i = 0
-      while i < arr.size - 1 
+      while i < arr.size - 1
         result = yield(result, init)
         init = arr[i + 2]
         i += 1
       end
-    else                                                              # when nothing exists (only block)
+    else # when nothing exists (only block)
       result = arr[0]
       init = arr[1]
       i = 0
@@ -148,45 +148,9 @@ module Enumerable
     result
   end
 end
-# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
 def multiply_els(args)
-  args.my_inject{ |result, init| result * init }
+  args.my_inject { |result, init| result * init }
 end
 
-
-p multiply_els([1, 4, 6, 9, 12, 24])
-
-p [1, 2, 3].my_inject { |result, init| result * init }
-
-p [1, 2, 3].my_inject(15) { |result, init| result * init }
-
-p [1, 2, 3, 4, 5].my_inject(:*)
-
-p (1..5).my_inject(:*)
-
-p [1, 2, 3].my_inject(15, :*)
-
-p (1..3).inject(15, :*)
-
-p "-----------------------------"
-
-p [1, 2, 3].my_inject("*")
-
-p (1..3).my_inject("*")
-
-p [1, 2, 3].my_inject(15, "*")
-
-p (1..3).inject(15, "*")
-
-p "######################################"
-
-# p (1..3).inject(15, "*") { |result, init| memo + n }
-
-# my_all?
-# p "%w[ant bear cat].my_all? { |word| word.length >= 3 } #{%w[ant bear cat].my_all? { |word| word.length >= 3 }}" #=> true
-# p "%w[ant bear cat].my_all? { |word| word.length >= 4 } #{%w[ant bear cat].my_all? { |word| word.length >= 4 }}" #=> false
-# p "%w[ant bear cat].my_all?(/a/)                        #{%w[ant bear cat].my_all?(/a/)}"                        #=> false
-# p "[1, 2i, 3.14].my_all?(Numeric)                       #{[1, 2i, 3.14].my_all?(Numeric)}"                       #=> true
-# p "[nil, true, 99].my_all?                              #{[nil, true, 99].my_all?}"                              #=> false
-# p "[].my_all?                                           #{[].my_all?}"                                           #=> true
+# rubocop: enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/ModuleLength
