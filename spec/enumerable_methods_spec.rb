@@ -102,4 +102,32 @@ describe Enumerable do
     end
   end
 
+  describe '#my_none' do
+    it 'returns true if none element of the array have 5 letters' do
+      expect(animals.my_none? { |word| word.length == 5 }).to eql(true)
+    end
+    it 'returns false as at least one element have 4 or more letters' do
+      expect(animals.my_none? { |word| word.length >= 4}).to eql(false)
+    end
+    it "accepts matching and returns true when none elements have a match" do
+      expect(animals.my_none?(/d/)).to eql(true)
+    end
+    it 'accepts matching against classes and return false as there is at least one element matching' do
+      numbers = [1, 3.14, 42]
+      expect(numbers.my_none?(Float)).to eql(false)
+    end
+    it 'returns true when the array is empty (none elements passed)' do
+      expect([].my_none?).to eql(true)
+    end
+    it 'returns true when all elements of the Array are nil' do
+      expect([nil].my_none?).to eql(true)
+    end
+    it 'returns true when all elements of the Array are nil or false' do
+      expect([nil, false].my_none?).to eql(true)
+    end
+    it 'checks if at least one element is true, return false when there is and false otherwise' do
+      values = [nil, false, true]
+      expect(values.my_none?).to eql(false)
+    end
+  end
 end
