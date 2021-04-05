@@ -130,4 +130,17 @@ describe Enumerable do
       expect(values.my_none?).to eql(false)
     end
   end
+
+  describe '#my_count' do
+    let(:array) { [1, 2, 4, 2] }
+    it 'returns the number of elements in the array' do
+      expect(array.my_count).to eql(4)
+    end
+    it 'returns the number of occurrences of the argument passed in the array' do
+      expect(array.my_count(2)).to eql(2)
+    end
+    it 'returns the number of ocurrences in the array that satisfies the block passed' do
+      expect(array.my_count { |x| x % 2 == 0 }).to eql(3)
+    end
+  end
 end
