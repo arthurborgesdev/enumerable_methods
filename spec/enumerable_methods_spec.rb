@@ -157,4 +157,28 @@ describe Enumerable do
       expect(range.my_map).to be_a(Enumerator)
     end
   end
+
+  describe '#my_inject' do
+    let(:range) { (5..10) }
+  
+    it 'returns the accumulation of values passed for each element in array (no argument passed)' do
+      expect(range.my_inject { |sum, n| sum + n }).to eql(45)
+    end
+    it 'returns the accumulation of values passed for each element with argument as starting point (argument passed)' do
+      expect(range.my_inject(1) { |product, n| product * n }).to eql(151200)
+    end
+    it 'returns the longest word in the array' do
+      longest = %w{ cat sheep bear }.my_inject do |memo, word|
+        memo.length > word.length ? memo : word
+      end
+      expect(longest).to eql("sheep")
+    end
+  end
+
+  describe '#multiply_els' do
+    let(:array) { [2, 4, 5]}
+    it 'multiplies all the elements of the array' do
+      expect(array.my_inject { | memo, n| memo * n }).to eql(40)
+    end
+  end
 end
