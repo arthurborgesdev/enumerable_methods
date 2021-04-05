@@ -41,7 +41,7 @@ describe Enumerable do
     end
   end
 
-  describe 'my_select' do
+  describe '#my_select' do
     it 'returns only an array with the multiple of 3 numbers in the Range' do
       expect((1..10).my_select { |i| i % 3 == 0 }).to eql([3, 6, 9])
     end
@@ -53,6 +53,31 @@ describe Enumerable do
     end
     it 'return an enumerator when a block is not passed' do
       expect((1..10).my_select).to be_a(Enumerator)
+    end
+  end
+
+  let(:animals) { %w[ant bear cat] }
+  let(:numbers) { [1, 2i, 3.14] }
+  let(:multi_values) { [nil, true, 99] }
+
+  describe '#my_all' do
+    it 'returns true if all elements of the array have words with 3 or more letters' do
+      expect(animals.my_all? { |word| word.length >= 3 }).to eql(true)
+    end
+    it 'returns false as not all elements have words with 4 or more letters' do
+      expect(animals.my_all? { |word| word.length >= 4}).to eql(false)
+    end
+    it "accepts matching and returns false when not all elements have a match" do
+      expect(animals.my_all?(/t/)).to eql(false)
+    end
+    it 'accepts matching against classes and return true when not all elements have a match' do
+      expect(numbers.my_all?(Numeric)).to eql(true)
+    end
+    it 'checks if all elements are true, return true when they are and false otherwise' do
+      expect(multi_values.my_all?).to eql(false)
+    end
+    it 'returns true when the array is empty (none elements passed)' do
+      expect([].my_all?).to eql(true)
     end
   end
 end
