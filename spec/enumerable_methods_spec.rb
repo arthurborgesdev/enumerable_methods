@@ -143,4 +143,18 @@ describe Enumerable do
       expect(array.my_count { |x| x % 2 == 0 }).to eql(3)
     end
   end
+
+  describe '#my_map' do
+    let(:range) { (1..4) }
+
+    it 'multiplies each element by itself in the Range' do
+      expect(range.my_map { |i| i * i }).to eql([1, 4, 9, 16])
+    end
+    it 'return the result of a block for each element on the array called upon' do
+      expect(range.my_map { 'cat' }).to eql(["cat", "cat", "cat", "cat"])
+    end
+    it 'returns an Enumerator when none block is given' do
+      expect(range.my_map).to be_a(Enumerator)
+    end
+  end
 end
