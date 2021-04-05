@@ -80,4 +80,26 @@ describe Enumerable do
       expect([].my_all?).to eql(true)
     end
   end
+
+  describe '#my_any' do
+    it 'returns true if any element of the array have 3 or more letters' do
+      expect(animals.my_any? { |word| word.length >= 3 }).to eql(true)
+    end
+    it 'returns true if at least one element have 4 or more letters' do
+      expect(animals.my_any? { |word| word.length >= 4}).to eql(true)
+    end
+    it "accepts matching and returns false when none elements have a match" do
+      expect(animals.my_any?(/d/)).to eql(false)
+    end
+    it 'accepts matching against classes and return true when at least one element have a match' do
+      expect(multi_values.my_any?(Integer)).to eql(true)
+    end
+    it 'checks if at least one element is true, return true when there is and false otherwise' do
+      expect(multi_values.my_any?).to eql(true)
+    end
+    it 'returns false when the array is empty (none elements passed)' do
+      expect([].my_any?).to eql(false)
+    end
+  end
+
 end
