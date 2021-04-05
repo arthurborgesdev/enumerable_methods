@@ -60,7 +60,7 @@ describe Enumerable do
   let(:numbers) { [1, 2i, 3.14] }
   let(:multi_values) { [nil, true, 99] }
 
-  describe '#my_all' do
+  describe '#my_all?' do
     it 'returns true if all elements of the array have words with 3 or more letters' do
       expect(animals.my_all? { |word| word.length >= 3 }).to eql(true)
     end
@@ -81,7 +81,7 @@ describe Enumerable do
     end
   end
 
-  describe '#my_any' do
+  describe '#my_any?' do
     it 'returns true if any element of the array have 3 or more letters' do
       expect(animals.my_any? { |word| word.length >= 3 }).to eql(true)
     end
@@ -102,7 +102,7 @@ describe Enumerable do
     end
   end
 
-  describe '#my_none' do
+  describe '#my_none?' do
     it 'returns true if none element of the array have 5 letters' do
       expect(animals.my_none? { |word| word.length == 5 }).to eql(true)
     end
