@@ -2,41 +2,41 @@ require_relative '../enumerable_methods'
 
 describe Enumerable do
   describe '#my_each' do
-    let(:a)  { ["a", "b", "c"] }
+    let(:a) { %w[a b c] }
     it "prints each element of the array separated by ' -- '" do
-      expect { a.my_each { |x| print x, " -- "} }.to output("a -- b -- c -- ").to_stdout
+      expect { a.my_each { |x| print x, ' -- ' } }.to output('a -- b -- c -- ').to_stdout
     end
-    it "returns the array which was called upon" do
-      expect(a.my_each { |x| print x, " -- "}).to be == a
+    it 'returns the array which was called upon' do
+      expect(a.my_each { |x| print x, ' -- ' }).to be == a
     end
-    it "returns an Enumerator if no block is passed for Array" do
+    it 'returns an Enumerator if no block is passed for Array' do
       expect(a.my_each).to be_a(Enumerator)
     end
 
-    h = {"a" => 100, "b" => 200 }
+    h = { 'a' => 100, 'b' => 200 }
     it "puts each key/value pair of the hash in the format 'key is value'" do
       expect { h.my_each { |key, value| puts "#{key} is #{value}" } }.to output("a is 100\nb is 200\n").to_stdout
     end
-    it "returns the hash which was called upon" do
+    it 'returns the hash which was called upon' do
       expect(h.my_each { |key, value| puts "#{key} is #{value}" }).to be == h
     end
-    it "returns an Enumerator if no block is passed for Hash" do
+    it 'returns an Enumerator if no block is passed for Hash' do
       expect(h.my_each).to be_a(Enumerator)
     end
   end
 
   describe '#my_each_with_index' do
-    h = {"cat" => 0, "dog" => 1, "wombat" => 2}
+    h = { 'cat' => 0, 'dog' => 1, 'wombat' => 2 }
     hash = {}
-    array = %w(cat dog wombat)
+    array = %w[cat dog wombat]
     it 'return a hash which the key is the element and the value is its index' do
-      array.my_each_with_index {|key, value| hash[key] = value }
+      array.my_each_with_index { |key, value| hash[key] = value }
       expect(hash).to eql(h)
     end
-    it "returns the array which was called upon" do
+    it 'returns the array which was called upon' do
       expect(array.my_each_with_index { |key, value| hash[key] = value }).to be == array
     end
-    it "returns an Enumerator if no block is passed for Hash" do
+    it 'returns an Enumerator if no block is passed for Hash' do
       expect(array.my_each_with_index).to be_a(Enumerator)
     end
   end
@@ -46,10 +46,10 @@ describe Enumerable do
       expect((1..10).my_select { |i| i % 3 == 0 }).to eql([3, 6, 9])
     end
     it 'returns only an array with the even numbers on the Array' do
-      expect([1, 2, 3, 4, 5].my_select { |num| num.even? }).to eql([2, 4])
+      expect([1, 2, 3, 4, 5].my_select(&:even?)).to eql([2, 4])
     end
     it 'return only an array with the selected element in the Array' do
-      expect([:foo, :bar].my_select { |x| x == :foo }).to eql([:foo])
+      expect(%i[foo bar].my_select { |x| x == :foo }).to eql([:foo])
     end
     it 'return an enumerator when a block is not passed' do
       expect((1..10).my_select).to be_a(Enumerator)
@@ -65,9 +65,9 @@ describe Enumerable do
       expect(animals.my_all? { |word| word.length >= 3 }).to eql(true)
     end
     it 'returns false as not all elements have words with 4 or more letters' do
-      expect(animals.my_all? { |word| word.length >= 4}).to eql(false)
+      expect(animals.my_all? { |word| word.length >= 4 }).to eql(false)
     end
-    it "accepts matching and returns false when not all elements have a match" do
+    it 'accepts matching and returns false when not all elements have a match' do
       expect(animals.my_all?(/t/)).to eql(false)
     end
     it 'accepts matching against classes and return true when not all elements have a match' do
@@ -86,9 +86,9 @@ describe Enumerable do
       expect(animals.my_any? { |word| word.length >= 3 }).to eql(true)
     end
     it 'returns true if at least one element have 4 or more letters' do
-      expect(animals.my_any? { |word| word.length >= 4}).to eql(true)
+      expect(animals.my_any? { |word| word.length >= 4 }).to eql(true)
     end
-    it "accepts matching and returns false when none elements have a match" do
+    it 'accepts matching and returns false when none elements have a match' do
       expect(animals.my_any?(/d/)).to eql(false)
     end
     it 'accepts matching against classes and return true when at least one element have a match' do
@@ -107,9 +107,9 @@ describe Enumerable do
       expect(animals.my_none? { |word| word.length == 5 }).to eql(true)
     end
     it 'returns false as at least one element have 4 or more letters' do
-      expect(animals.my_none? { |word| word.length >= 4}).to eql(false)
+      expect(animals.my_none? { |word| word.length >= 4 }).to eql(false)
     end
-    it "accepts matching and returns true when none elements have a match" do
+    it 'accepts matching and returns true when none elements have a match' do
       expect(animals.my_none?(/d/)).to eql(true)
     end
     it 'accepts matching against classes and return false as there is at least one element matching' do
@@ -140,7 +140,7 @@ describe Enumerable do
       expect(array.my_count(2)).to eql(2)
     end
     it 'returns the number of ocurrences in the array that satisfies the block passed' do
-      expect(array.my_count { |x| x % 2 == 0 }).to eql(3)
+      expect(array.my_count(&:even?)).to eql(3)
     end
   end
 
@@ -148,10 +148,10 @@ describe Enumerable do
     let(:range) { (1..4) }
 
     it 'multiplies each element by itself in the Range' do
-      expect(range.my_map { |i| i * i }).to eql([1, 4, 9, 16])
+      expect(range.my_map { |i| i**2 }).to eql([1, 4, 9, 16])
     end
     it 'return the result of a block for each element on the array called upon' do
-      expect(range.my_map { 'cat' }).to eql(["cat", "cat", "cat", "cat"])
+      expect(range.my_map { 'cat' }).to eql(%w[cat cat cat cat])
     end
     it 'returns an Enumerator when none block is given' do
       expect(range.my_map).to be_a(Enumerator)
@@ -160,25 +160,25 @@ describe Enumerable do
 
   describe '#my_inject' do
     let(:range) { (5..10) }
-  
+
     it 'returns the accumulation of values passed for each element in array (no argument passed)' do
       expect(range.my_inject { |sum, n| sum + n }).to eql(45)
     end
     it 'returns the accumulation of values passed for each element with argument as starting point (argument passed)' do
-      expect(range.my_inject(1) { |product, n| product * n }).to eql(151200)
+      expect(range.my_inject(1) { |product, n| product * n }).to eql(151_200)
     end
     it 'returns the longest word in the array' do
-      longest = %w{ cat sheep bear }.my_inject do |memo, word|
+      longest = %w[cat sheep bear].my_inject do |memo, word|
         memo.length > word.length ? memo : word
       end
-      expect(longest).to eql("sheep")
+      expect(longest).to eql('sheep')
     end
   end
 
   describe '#multiply_els' do
-    let(:array) { [2, 4, 5]}
+    let(:array) { [2, 4, 5] }
     it 'multiplies all the elements of the array' do
-      expect(array.my_inject { | memo, n| memo * n }).to eql(40)
+      expect(array.my_inject { |memo, n| memo * n }).to eql(40)
     end
   end
 end
