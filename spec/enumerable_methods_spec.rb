@@ -40,4 +40,19 @@ describe Enumerable do
       expect(array.my_each_with_index).to be_a(Enumerator)
     end
   end
+
+  describe 'my_select' do
+    it 'returns only an array with the multiple of 3 numbers in the Range' do
+      expect((1..10).my_select { |i| i % 3 == 0 }).to eql([3, 6, 9])
+    end
+    it 'returns only an array with the even numbers on the Array' do
+      expect([1, 2, 3, 4, 5].my_select { |num| num.even? }).to eql([2, 4])
+    end
+    it 'return only an array with the selected element in the Array' do
+      expect([:foo, :bar].my_select { |x| x == :foo }).to eql([:foo])
+    end
+    it 'return an enumerator when a block is not passed' do
+      expect((1..10).my_select).to be_a(Enumerator)
+    end
+  end
 end
