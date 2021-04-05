@@ -24,4 +24,20 @@ describe Enumerable do
       expect(h.my_each).to be_a(Enumerator)
     end
   end
+
+  describe '#my_each_with_index' do
+    h = {"cat" => 0, "dog" => 1, "wombat" => 2}
+    hash = {}
+    array = %w(cat dog wombat)
+    it 'return a hash which the key is the element and the value is its index' do
+      array.my_each_with_index {|key, value| hash[key] = value }
+      expect(hash).to eql(h)
+    end
+    it "returns the array which was called upon" do
+      expect(array.my_each_with_index { |key, value| hash[key] = value }).to be == array
+    end
+    it "returns an Enumerator if no block is passed for Hash" do
+      expect(array.my_each_with_index).to be_a(Enumerator)
+    end
+  end
 end
